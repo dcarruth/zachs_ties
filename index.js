@@ -4,13 +4,19 @@ const PORT = process.env.PORT || 5000
 const {Pool} = require('pg')
 var pg = require('pg');
 
-	const pool = new Pool({
-	user: 'posttemp',
-	host: 'localhost',
-	database: 'zachs_ties',
-	password: 'cs313',
-	port: 5432,});
-
+	if (!process.env.DATABASE_URL){
+		var pool = new Pool({
+		user: 'posttemp',
+		host: 'localhost',
+		database: 'zachs_ties',
+		password: 'cs313',
+		port: 5432,});
+	}
+	else {
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			var pool = client;
+		});
+	}
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
@@ -26,8 +32,5 @@ express()
 	  }
   });
 	  pool.end();
-  })
-  .get('/test', (req, res) => {
-	  res.send(process.env.DATABASE_URL);
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
