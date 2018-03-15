@@ -2,16 +2,15 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 const {Pool} = require('pg')
-var pg = require('pg');
-
+var pool = null;
 	if (process.env.DATABASE_URL){
 		var url = "postgres://jnpwkepxmegxxf:a047319b418d500e2e0ab6ead829af6d645c678fb3b9c168b31970c164e35b3a@ec2-54-204-45-43.compute-1.amazonaws.com:5432/d3vtsi1iri5hka";
-		pg.connect(url, function(err, client, done) {
-			var pool = client;
+		pool = new Pool ({
+			connectionString: url
 		});
 	}
 	else {
-		var pool = new Pool({
+		pool = new Pool({
 		user: 'posttemp',
 		host: 'localhost',
 		database: 'zachs_ties',
