@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 express()
   .use(bodyParser.json())
-  .use(bodyParser.urlencoded({extended: true}))
+  .use(bodyParser.urlencoded({ extended: true }))
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
@@ -24,7 +24,20 @@ express()
 	  pool.end();
   })
   .get('/order', (req, res) => res.render('pages/order'))
-  .post('/', (req, res) => {
-	  res.render('pages/zach_home')
+  .post('/confirm', (req, res) => {
+	  var color = req.body.color;
+	  var numTies = req.body.numTies;
+	  var fabric = req.body.fabric;
+	  var dateNeeded = req.body.dateNeeded;
+	  var pattern = req.body.pattern;
+	  var notes = req.body.notes;
+	  res.render('pages/confirm',{
+		  color: color,
+		  numTies: numTies,
+		  fabric: fabric,
+		  dateNeeded: dateNeeded,
+		  pattern: pattern,
+		  notes: notes
+	  });
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))

@@ -18,6 +18,13 @@ function getdb (){
 	return pool;
 }
 
+function checkOrder() {
+	alert("Please double check your order and click 'Place Order' to confirm.");
+	conf = document.getElementById('confirm');
+	conf.style.visibility = "visible";
+	return false;
+}
+
 module.exports = {
 	getdb: getdb
 };

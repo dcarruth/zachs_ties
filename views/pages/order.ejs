@@ -8,14 +8,15 @@
 
   <% include ../partials/zach_nav.ejs %>
 	<div class="forms">
-		<form method="post" action="/">
-			<input id="numTies" type="number">Number of Ties</input><br/>
-			<input id="dateNeeded" type="date">Date Needed By</input><br/>
-			<input id="color" type="text">Color</input><br/>
-			<input id="pattern" type="text">Pattern (Floral, Stripes, Polka Dots, etc.)</input><br/>
-			<input id="fabric" type="text">Type of Fabric</input><br/>
-			<input id="notes" type="textarea">Notes</input><br/>
-			<input type="submit" value="Continue"></input><br/>
+		<form method="post" action="/confirm" onkeypress="return event.keyCode != 13;">
+			<input id="numTies" name="numTies" type="number">Number of Ties</input><br/>
+			<input id="dateNeeded" name="dateNeeded" type="date">Date Needed By</input><br/>
+			<input id="color" name="color" type="text">Color</input><br/>
+			<input id="pattern" name="pattern" type="text">Pattern (Floral, Stripes, Polka Dots, etc.)</input><br/>
+			<input id="fabric" name="fabric" type="text">Type of Fabric</input><br/>
+			<input id="notes" name="notes" type="textarea">Notes</input><br/>
+			<button type="button" value="Continue" onclick="return checkOrder()">Continue</button><br/>
+			<input id="confirm" type="submit" value="Place Order"></input><br/>
 		</form>
 	</div>
 </body>

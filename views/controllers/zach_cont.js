@@ -1,4 +1,4 @@
-var db = require('./../models/zach.js');
+var db = require('./../../public/zach.js');
 
 function getdb (){
 	return db.getdb();
