@@ -13,7 +13,7 @@ html{
 	color: #222222;
 	height: 5%;
 	width: auto;
-	border-radius: 25px;
+	border-radius: 5px;
 	margin-left: 1%;
 	margin-right: 1%;
 	font-family: Georgia, serif;
@@ -37,8 +37,7 @@ html{
 }
 
 .navbar-inverse{
-	border-radius: 25px !important;
-	margin-top: -.5%;
+	border-radius: 5px !important;
 	margin-left: .5%;
 	margin-right: .5%;
 }

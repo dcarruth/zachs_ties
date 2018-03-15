@@ -25,6 +25,8 @@ typeOfFabric VARCHAR(300) NOT NULL,
 notes VARCHAR(5000)
 );
 
+ALTER TABLE orders ADD dateOrdered date NOT NULL;
+
 CREATE TABLE pictures (
 pictureID SERIAL PRIMARY KEY,
 customerID smallint NOT NULL,
@@ -39,6 +41,13 @@ paymentID SERIAL PRIMARY KEY,
 payment VARCHAR(300) NOT NULL UNIQUE
 );
 
+INSERT INTO payments (payment) VALUES ('Venmo');
+INSERT INTO payments (payment) VALUES ('Cash');
+INSERT INTO payments (payment) VALUES ('Check');
+INSERT INTO payments (payment) VALUES ('Facebook Pay');
+INSERT INTO payments (payment) VALUES ('Trade (By Approval Only)');
+
+
 CREATE TABLE owners (
 ownerID SERIAL PRIMARY KEY,
 contactPhone VARCHAR(200) NOT NULL,
@@ -48,5 +57,5 @@ bio VARCHAR(5000) NOT NULL
 );
 
 CREATE USER posttemp WITH PASSWORD 'cs313';
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA public TO posttemp;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO posttemp;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO posttemp;
