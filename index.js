@@ -4,18 +4,18 @@ const PORT = process.env.PORT || 5000
 const {Pool} = require('pg')
 var pg = require('pg');
 
-	if (!process.env.DATABASE_URL){
+	if (process.env.DATABASE_URL){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			var pool = client;
+		});
+	}
+	else {
 		var pool = new Pool({
 		user: 'posttemp',
 		host: 'localhost',
 		database: 'zachs_ties',
 		password: 'cs313',
 		port: 5432,});
-	}
-	else {
-		//pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			//var pool = client;
-		});
 	}
 express()
   .use(express.static(path.join(__dirname, 'public')))
