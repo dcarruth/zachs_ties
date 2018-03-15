@@ -5,7 +5,8 @@ const {Pool} = require('pg')
 var pg = require('pg');
 
 	if (process.env.DATABASE_URL){
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		var url = "postgres://jnpwkepxmegxxf:a047319b418d500e2e0ab6ead829af6d645c678fb3b9c168b31970c164e35b3a@ec2-54-204-45-43.compute-1.amazonaws.com:5432/d3vtsi1iri5hka";
+		pg.connect(url, function(err, client, done) {
 			var pool = client;
 		});
 	}
