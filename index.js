@@ -13,8 +13,8 @@ var pg = require('pg');
 		port: 5432,});
 	}
 	else {
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			var pool = client;
+		//pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			//var pool = client;
 		});
 	}
 express()
