@@ -42,6 +42,15 @@ html{
 	margin-right: .5%;
 }
 
+.forms{
+	height: 60%;
+	width: 40%;
+	margin-left: 10%;
+	margin-top: 3%;
+	margin-right: 5%;
+	float: left;
+}
+
 #footer{
 	
 }
