@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/zach_header.ejs %>
+</head>
+
+<body id="background1">
+
+  <% include ../partials/zach_nav.ejs %>
+	<div class="forms">
+		<form method="post" action="/create" onkeypress="return event.keyCode != 13;">
+			<input id="name" name="name" type="text">Name</input><br/>
+			<input id="address" name="address" type="text">Address</input><br/>
+			<input id="city" name="city" type="text">City</input><br/>
+			<input id="state" name="state" type="text">State</input><br/>
+			<input id="zip" name="zip" type="text">Zip</input><br/>
+			<input id="email" name="email" type="email">Email</input><br/>
+			<input id="phone" name="phone" type="phone">Phone</input><br/>
+			<input id="username" name="username" type="text">Username</input><br/>
+			<input id="password" name="password" type="password">Password</input><br/>
+			<input type="submit" value="Create Account"></input><br/>
+		</form>
+	</div>
+</body>
+</html>

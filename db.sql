@@ -11,6 +11,9 @@ username VARCHAR(500) NOT NULL UNIQUE,
 password VARCHAR(500) NOT NULL
 );
 
+ALTER TABLE customers DROP COLUMN zip;
+ALTER TABLE customers ADD COLUMN zip VARCHAR(100) NOT NULL;
+
 CREATE TABLE orders (
 orderID SERIAL PRIMARY KEY,
 customerID smallint,

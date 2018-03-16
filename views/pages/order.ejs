@@ -15,6 +15,11 @@
 			<input id="pattern" name="pattern" type="text">Pattern (Floral, Stripes, Polka Dots, etc.)</input><br/>
 			<input id="fabric" name="fabric" type="text">Type of Fabric</input><br/>
 			<input id="notes" name="notes" type="textarea">Notes</input><br/>
+			<select name="method">
+				<% for(var i=0; i < result.length; i++) { %>
+				<option name="method"><%= result[i] %></option>
+				<% } %>
+			</select><br/>
 			<button type="button" value="Continue" onclick="return checkOrder()">Continue</button><br/>
 			<input id="confirm" type="submit" value="Place Order"></input><br/>
 		</form>
