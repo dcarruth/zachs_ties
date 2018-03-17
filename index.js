@@ -4,8 +4,15 @@ const PORT = process.env.PORT || 5000
 var dataController = require('./views/controllers/zach_cont.js');
 var bodyParser = require('body-parser');
 var date = require('date-utils');
+var session = require('client-sessions');
 
 express()
+  .use(session({
+	  cookieName: 'session',
+	  secret: 'user-session',
+	  duration: 30 * 60 * 1000,
+	  activeDuration: 5 * 60 * 1000,
+  }))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .use(express.static(path.join(__dirname, 'public')))
@@ -98,8 +105,10 @@ express()
 			  if (response.rows != "")
 			  {
 				  if (response.rows[0].password == pass){
-					res.render('pages/zach_home');
-				  }
+					req.session.id = response.rows[0].customerid;
+					req.session.name = response.rows[0].name;
+					res.render('pages/zach_home', {name: req.session.name});
+				  }	
 				  else {
 					 res.render('pages/login'); 
 				  }
@@ -111,6 +120,11 @@ express()
 	  })	  
 	  pool.end();
   })
+  .get('/logout', (req, res) => {
+	  req.session.destroy();
+	  res.render('pages/zach_home');
+  })
+  .get('/gallery', (req, res) => res.render('pages/gallery'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
   

@@ -2,12 +2,16 @@
 <html>
 <head>
   <% include ../partials/zach_header.ejs %>
+	
+	<% if (typeof name != "undefined") { %>
+	<h3> Welcome: <%= name %> </h3>
+	<% } %>
 </head>
 
 <body id="background1">
 
   <% include ../partials/zach_nav.ejs %>
-
+	
 	<img src="img/zach.PNG" class="img-rounded pic">
 	<div id="about">
 		<strong><p>
