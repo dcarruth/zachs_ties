@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var date = require('date-utils');
 var session = require('client-sessions');
 
+
 express()
   .use(session({
 	  cookieName: 'session',
@@ -18,7 +19,7 @@ express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/zach_home'))
+  .get('/', (req, res) => res.render('pages/zach_home',{name: req.session.name}))
   .get('/order', (req, res) => {
 	   var pool = dataController.getdb();
 	   pool.query("SELECT payment FROM payments", (err, response) => {
@@ -30,7 +31,7 @@ express()
 			for (var i in response.rows){
 				result.push(response.rows[i].payment);
 			}
-			res.render('pages/order',{result:result});
+			res.render('pages/order',{result:result,name: req.session.name});
 			pool.end();
 	   }
   })})
@@ -49,7 +50,7 @@ express()
 	  pool.query(q, params, (err, re) => {
 		  if (err){
 			  console.log(err);
-			  res.render('pages/zach_home');
+			  res.render('pages/zach_home',{name: req.session.name});
 		  }
 		  else {
 			  res.render('pages/confirm',{
@@ -59,14 +60,15 @@ express()
 		  dateNeeded: dateNeeded,
 		  pattern: pattern,
 		  notes: notes,
-		  method: method
+		  method: method,
+		  name: req.session.name
 			});
 		 }
 	  });
 	  
 	  pool.end();
   })
-  .get('/create', (req,res) => res.render('pages/create'))
+  .get('/create', (req,res) => res.render('pages/create',{name: req.session.name}))
   .post('/create', (req, resp) => {
 		var pool = dataController.getdb();
 		var name = req.body.name;
@@ -85,12 +87,18 @@ express()
 				console.log(err);
 				resp.render('pages/create');
 			}else{
-				resp.render('pages/zach_home')	
+				resp.render('pages/zach_home',{name: name})	
 			}
 		})
 		pool.end();
   })
-  .get('/login', (req, res) => res.render('pages/login'))
+  .get('/login', (req, res) => {
+	  if (typeof req.session.name == "undefined"){
+	  res.render('pages/login');
+	  }else{
+		  res.render('pages/zach_home',{name: req.session.name});
+	  }
+	  })
   .post('/login', (req, res) =>{
 	  var pool = dataController.getdb();
 	  var username = req.body.username;
@@ -124,7 +132,7 @@ express()
 	  req.session.destroy();
 	  res.render('pages/zach_home');
   })
-  .get('/gallery', (req, res) => res.render('pages/gallery'))
+  .get('/gallery', (req, res) => res.render('pages/gallery',{name: req.session.name}))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
   
