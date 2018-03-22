@@ -20,7 +20,26 @@ function getdb (){
 	return pool;
 }
 
+function home(req, res){
+	res.render('pages/zach_home',{name: req.session.name});
+}
+
+function logout(req, res){
+	req.session.destroy();
+	res.render('pages/zach_home');
+}
+
+function getPayments(req, res){
+	var pool = getdb();
+	data.p(pool, function (result){
+		res.render('pages/order',{result:result,name: req.session.name});
+		pool.end();
+	});	
+}
 
 module.exports = {
 	getdb: getdb,
+	home: home,
+	logout: logout,
+	getPayments: getPayments
 };

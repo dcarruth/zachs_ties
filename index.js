@@ -5,36 +5,18 @@ var dataController = require('./views/controllers/zach_cont.js');
 var bodyParser = require('body-parser');
 var date = require('date-utils');
 var session = require('client-sessions');
-
+const duration = 30 * 60 *1000;
+const active = 5 * 60 * 1000;
 
 express()
-  .use(session({
-	  cookieName: 'session',
-	  secret: 'user-session',
-	  duration: 30 * 60 * 1000,
-	  activeDuration: 5 * 60 * 1000,
-  }))
+  .use(session({cookieName: 'session', secret: 'user-session', duration: duration, activeDuration: active,}))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/zach_home',{name: req.session.name}))
-  .get('/order', (req, res) => {
-	   var pool = dataController.getdb();
-	   pool.query("SELECT payment FROM payments", (err, response) => {
-	
-		if (err) {
-			console.log(err);
-		} else {
-			var result = [];
-			for (var i in response.rows){
-				result.push(response.rows[i].payment);
-			}
-			res.render('pages/order',{result:result,name: req.session.name});
-			pool.end();
-	   }
-  })})
+  .get('/', dataController.home)
+  .get('/order', dataController.getPayments)
   .post('/confirm', (req, res) => {
 	  var pool = dataController.getdb();
 	  var color = req.body.color;
@@ -128,10 +110,7 @@ express()
 	  })	  
 	  pool.end();
   })
-  .get('/logout', (req, res) => {
-	  req.session.destroy();
-	  res.render('pages/zach_home');
-  })
+  .get('/logout', dataController.logout)
   .get('/gallery', (req, res) => res.render('pages/gallery',{name: req.session.name}))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
