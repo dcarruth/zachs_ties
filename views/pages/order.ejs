@@ -9,19 +9,42 @@
   <% include ../partials/zach_nav.ejs %>
 	<div class="forms">
 		<form method="post" action="/confirm" onkeypress="return event.keyCode != 13;">
-			<input id="numTies" name="numTies" type="number">Number of Ties</input><br/>
-			<input id="dateNeeded" name="dateNeeded" type="date">Date Needed By</input><br/>
-			<input id="color" name="color" type="text">Color</input><br/>
-			<input id="pattern" name="pattern" type="text">Pattern (Floral, Stripes, Polka Dots, etc.)</input><br/>
-			<input id="fabric" name="fabric" type="text">Type of Fabric</input><br/>
-			<input id="notes" name="notes" type="textarea">Notes</input><br/>
-			<select name="method">
-				<% for(var i=0; i < result.length; i++) { %>
-				<option name="method"><%= result[i] %></option>
-				<% } %>
-			</select><br/>
-			<button type="button" value="Continue" onclick="return checkOrder()">Continue</button><br/>
-			<input id="confirm" type="submit" value="Place Order"></input><br/>
+			<div class="form-group">
+				<label for="numTies">Number of Ties:</label><br/>
+				<input id="numTies" name="numTies" type="number" class="form-control" placeholder="Number of Ties"></input>
+			</div>
+			<div class="form-group">
+				<label for="dateNeeded">Date Needed By:</label><br/>
+				<input id="dateNeeded" name="dateNeeded" type="date" class="form-control" placeholder="Date Needed By"></input>
+			</div>
+			<div class="form-group">
+				<label for="color">Color:</label><br/>
+				<input id="color" class="form-control" name="color" type="text" placeholder="Color"></input>
+			</div>
+			<div class="form-group">
+				<label for="pattern">Pattern:</label><br/>
+				<input id="pattern" name="pattern" class="form-control" type="text" placeholder="(Floral, Stripes, Polka Dots, etc.)"></input>
+			</div>
+			<div class="form-group">	
+				<label for="fabric">Fabric:</label><br/>
+				<input id="fabric" name="fabric" type="text" class="form-control" placeholder="Type of Fabric"></input>
+			</div>
+			<div class="form-group">
+				<label for="notes">Extra Notes:</label><br/>
+				<textarea id="notes" class="form-control" name="notes" rows="4" placeholder="Notes"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="method">Payment Method: </label><br/>
+				<select name="method" class="form-control">
+					<% for(var i=0; i < result.length; i++) { %>
+					<option name="method" value="<%= id[i]%>"><%= result[i] %></option>
+					<% } %>
+				</select>
+			</div>
+			<div class="form-group">
+				<button type="button" value="Continue" onclick="return checkOrder()" class="btn btn-default">Continue</button><br/><br/>
+				<input id="confirm" type="submit" value="Place Order" class="btn btn-success"></input><br/>
+			</div>
 		</form>
 	</div>
 </body>

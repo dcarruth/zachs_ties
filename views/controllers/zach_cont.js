@@ -31,15 +31,116 @@ function logout(req, res){
 
 function getPayments(req, res){
 	var pool = getdb();
-	data.p(pool, function (result){
-		res.render('pages/order',{result:result,name: req.session.name});
+	data.p(pool, function (result, id){
+		res.render('pages/order',{result:result, id:id, name: req.session.name});
 		pool.end();
 	});	
+}
+
+function login(req, res){
+	if (typeof req.session.name == "undefined"){
+	  res.render('pages/login');
+	  }else{
+		  res.render('pages/zach_home',{name: req.session.name});
+	  }
+}
+
+function create(req, res){
+	res.render('pages/create',{name: req.session.name});
+}
+
+function gallery(req, res){
+	res.render('pages/gallery',{name: req.session.name});
+}
+
+function createOrder(req, res){
+	var pool = getdb();
+	var color = req.body.color;
+	var numTies = req.body.numTies;
+	var fabric = req.body.fabric;
+	var dateNeeded = req.body.dateNeeded;
+	var pattern = req.body.pattern;
+	var notes = req.body.notes;
+	var method = req.body.method;
+	var params = [req.session.id, method, numTies, dateNeeded, color, pattern, fabric, notes, Date.today()];
+	if (typeof req.session.name == "undefined"){
+			res.render('pages/confirm',{
+			message: "Oops! Please login before ordering."
+	})
+	pool.end();
+	return;
+	}
+
+	data.co(pool, params, function (err){
+		
+		if (err){
+			res.render('pages/confirm',{
+			message: "Oops! There was an error in processing your order. Please try again. If the error continues please try again later."
+		})}
+		  
+		  else {
+			res.render('pages/confirm',{
+			message: "Thank you for ordering from On Point Ties! You order will be processed and you will receive and email within 48 hours."
+		  })};
+	
+	});
+  
+	pool.end();
+}
+
+function createAccount(req, res) {
+	var pool = getdb();
+	var name = req.body.name;
+	var address = req.body.address;
+	var city = req.body.city;
+	var state = req.body.state;
+	var zip = req.body.zip;
+	var email = req.body.email;
+	var phone = req.body.phone;
+	var username = req.body.username;
+	var password = req.body.password;
+	var params = [name, address, city, state, zip, phone, email, username, password];
+	data.createAccount(pool, params, function (err){
+		if (err || typeof name == "undefined"){
+			res.render('pages/confirm',{
+			message: "Oops! There was an error in creating your account. Please try again."
+		})}else {
+			res.render('pages/zach_home', {name:name});
+		}
+	});
+	pool.end();
+}
+
+function loginValidate(req, res){
+	var pool = getdb();
+	var username = req.body.username;
+	var pass = req.body.password;
+	var params = [username];
+	data.login(pool, params, pass, function(err, result){
+		if (err == 1){
+			res.render('pages/confirm',{message: result});
+		}
+		else if(err)
+		{
+			res.render('pages/confirm',{message: "Oops! Something went wrong. Please try again!"});
+		}
+		else {
+			req.session.name = result.name;
+			req.session.id = result.id;
+			res.render('pages/zach_home',{name: result.name});
+		}
+	})
 }
 
 module.exports = {
 	getdb: getdb,
 	home: home,
 	logout: logout,
-	getPayments: getPayments
+	getPayments: getPayments,
+	login: login,
+	create: create,
+	gallery: gallery,
+	createOrder: createOrder,
+	createAccount: createAccount,
+	loginValidate:loginValidate
 };

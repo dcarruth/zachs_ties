@@ -24,7 +24,7 @@ html{
 	height: 50%;
 	width: 20%;
 	margin-left: 10%;
-	margin-top: 3%;
+	margin-top: 1.5%;
 	margin-right: 5%;
 	float: left;
 }
@@ -55,6 +55,16 @@ html{
 	visibility: hidden;
 }
 
+.message{
+	margin-left: 25%;
+	margin-top: 5%;
+	font-style: italic;
+	color: red;
+}
+
+#returnH{
+	margin-left: 25%;
+}
 #footer{
 	
 }
