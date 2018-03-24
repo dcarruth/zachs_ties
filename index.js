@@ -24,6 +24,8 @@ express()
   .post('/login', dataController.loginValidate)
   .get('/logout', dataController.logout)
   .get('/gallery', dataController.gallery)
+  .get('/edit', dataController.edit)
+  .post('/edit', dataController.update)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
   

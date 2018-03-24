@@ -65,10 +65,50 @@ function login(pool, params, pass, callback){
 	  })	
 }
 
+function edit(pool, id, callback){
+	var q = "SELECT * FROM customers WHERE customerid = $1";
+	var p = [id];
+	pool.query(q, p, (err, response) => {
+		var result = [];
+		var name = response.rows[0].name;
+		var address = response.rows[0].address;
+		var city = response.rows[0].city;
+		var st = response.rows[0].st;
+		var zip = response.rows[0].zip;
+		var phone = response.rows[0].phone;
+		var email = response.rows[0].email;
+		var username = response.rows[0].username;
+		result.push(name);
+		result.push(address);
+		result.push(city);
+		result.push(st);
+		result.push(zip);
+		result.push(email);
+		result.push(phone);
+		result.push(username);
+		callback(result);
+	})
+}
+
+function updateAccount(pool, params, callback){
+	var q = "UPDATE customers SET name = $1, address = $2, city = $3, st = $4, zip = $5, phone = $6, email = $7, username = $8, password = $9 WHERE customerid = $10";
+	console.log(q);
+	console.log(params);
+	pool.query(q,params,(err) => {
+		if (err){
+			console.log(err);	
+			callback(1);
+		}else{
+		callback(null);
+		}
+	});
+}
 
 module.exports = {
 	p: payment,
 	co: createOrder,
 	createAccount: createAccount,
-	login: login
+	login: login,
+	edit: edit,
+	updateAccount: updateAccount
 };

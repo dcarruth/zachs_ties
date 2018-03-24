@@ -1,5 +1,7 @@
 var data = require('./../models/data.js');
-
+var path = require('path'),
+    fs = require('fs');
+	
 function getdb (){
 	const {Pool} = require('pg');
 	var pool = null;
@@ -70,7 +72,7 @@ function createOrder(req, res){
 	pool.end();
 	return;
 	}
-
+	
 	data.co(pool, params, function (err){
 		
 		if (err){
@@ -132,6 +134,43 @@ function loginValidate(req, res){
 	})
 }
 
+function edit(req, res){
+	if (typeof req.session.name == "undefined"){
+		res.render('pages/login', {name: "Please login to edit your account! Don't have an account? Please select \"Sign Up\" to create one now!"});
+	}
+	else {
+		var pool = getdb();
+		data.edit(pool, req.session.id, function(result){
+			res.render('pages/edit', {name: req.session.name, result: result});
+		})
+	
+	}
+	pool.end();
+}
+
+function update(req, res){
+	var pool = getdb();
+	var name = req.body.name;
+	var address = req.body.address;
+	var city = req.body.city;
+	var state = req.body.state;
+	var zip = req.body.zip;
+	var email = req.body.email;
+	var phone = req.body.phone;
+	var username = req.body.username;
+	var password = req.body.password;
+	var params = [name, address, city, state, zip, phone, email, username, password, req.session.id];
+	data.updateAccount(pool, params, function (err){
+		if (err){
+			res.render('pages/confirm',{
+			message: "Oops! There was an error in updating your account. Please try again."
+		})}else {
+			res.render('pages/confirm', {name:name, message: "Your account has been updated!"});
+		}
+	});
+	pool.end();
+}
+
 module.exports = {
 	getdb: getdb,
 	home: home,
@@ -142,5 +181,7 @@ module.exports = {
 	gallery: gallery,
 	createOrder: createOrder,
 	createAccount: createAccount,
-	loginValidate:loginValidate
+	loginValidate:loginValidate,
+	edit: edit,
+	update: update
 };
