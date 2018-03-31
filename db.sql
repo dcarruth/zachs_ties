@@ -59,6 +59,13 @@ name VARCHAR(500) NOT NULL,
 bio VARCHAR(5000) NOT NULL
 );
 
+ALTER TABLE owners ADD COLUMN username VARCHAR(500) NOT NULL UNIQUE;
+ALTER TABLE owners ADD COLUMN password VARCHAR(500) NOT NULL;
+INSERT INTO owners (contactphone, contactemail, name, bio, username, password) VALUES
+('2082068842','zachlarkin12@gmail.com','Zach Larkin','Born in Shelly, Idaho','zlarkin','$2a$10$3LycR9iNc3pykUCVDC0YGu8FGOpkSiXYBHSM2MdVCbBwm.B6PamK6');
+
+
+
 CREATE USER posttemp WITH PASSWORD 'cs313';
 GRANT ALL ON ALL TABLES IN SCHEMA public TO posttemp;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO posttemp;

@@ -18,9 +18,39 @@ html{
 	margin-right: 1%;
 	font-family: Georgia, serif;
 
+
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+	width: 90%;
+	margin-left: auto;
+	margin-right:auto;
+	margin-top: 5%;
+}
+
+th{
+	border: 1px solid black;
+    border-collapse: collapse;
+	padding: 15px !important;
+}
+
+td{
+	border: 1px solid black;
+    border-collapse: collapse;
+	padding: 15px !important;
 }
 
 .pic{
+	height: 70%;
+	width: 35%;
+	margin-left: 32.5%;
+	margin-top: 1.5%;
+
+}
+
+.pic2{
 	height: 50%;
 	width: 20%;
 	margin-left: 10%;

@@ -1,7 +1,10 @@
 var data = require('./../models/data.js');
 var path = require('path'),
     fs = require('fs');
-	
+
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 function getdb (){
 	const {Pool} = require('pg');
 	var pool = null;
@@ -32,11 +35,16 @@ function logout(req, res){
 }
 
 function getPayments(req, res){
-	var pool = getdb();
-	data.p(pool, function (result, id){
-		res.render('pages/order',{result:result, id:id, name: req.session.name});
-		pool.end();
-	});	
+	if (typeof req.session.name == "undefined"){
+		res.render('pages/login', {name: "Please login before creating an order."});
+	}
+	else {
+		var pool = getdb();
+		data.p(pool, function (result, id){
+			res.render('pages/order',{result:result, id:id, name: req.session.name});
+			pool.end();
+		});	
+	}
 }
 
 function login(req, res){
@@ -101,16 +109,24 @@ function createAccount(req, res) {
 	var phone = req.body.phone;
 	var username = req.body.username;
 	var password = req.body.password;
-	var params = [name, address, city, state, zip, phone, email, username, password];
-	data.createAccount(pool, params, function (err){
+	
+	bcrypt.hash(password, saltRounds, function(err, hash) {
+		var params = [name, address, city, state, zip, phone, email, username, hash];
+		data.createAccount(pool, params, function (err, result){
 		if (err || typeof name == "undefined"){
+			console.log(err);
 			res.render('pages/confirm',{
 			message: "Oops! There was an error in creating your account. Please try again."
 		})}else {
+			req.session.name = name;
+			req.session.id = result.rows[0].customerid;
 			res.render('pages/zach_home', {name:name});
 		}
+		pool.end();
 	});
-	pool.end();
+	});
+	
+
 }
 
 function loginValidate(req, res){
@@ -159,16 +175,38 @@ function update(req, res){
 	var phone = req.body.phone;
 	var username = req.body.username;
 	var password = req.body.password;
-	var params = [name, address, city, state, zip, phone, email, username, password, req.session.id];
-	data.updateAccount(pool, params, function (err){
-		if (err){
-			res.render('pages/confirm',{
-			message: "Oops! There was an error in updating your account. Please try again."
-		})}else {
-			res.render('pages/confirm', {name:name, message: "Your account has been updated!"});
-		}
+	bcrypt.hash(password, saltRounds, function(err, hash) {
+		var params = [name, address, city, state, zip, phone, email, username, hash, req.session.id];
+		data.updateAccount(pool, params, function (err){
+			if (err){
+				res.render('pages/confirm',{
+				message: "Oops! There was an error in updating your account. Please try again."
+			})}else {
+				res.render('pages/confirm', {name:name, message: "Your account has been updated!"});
+			}
+			pool.end();
+		});
 	});
-	pool.end();
+	
+}
+
+function admin(req, res){
+	res.render('pages/admin');
+}
+
+function adminValidate(req, res){
+	var pool = getdb();
+	var user = req.body.username;
+	var pass = req.body.password;
+	var params = [user]
+	data.validateAdmin(pool, params, pass, function(err, result){
+		if (err){
+			res.render('pages/confirm', {message: "Error! Invalid credentials. If you are a customer, please login using the login tab above."});
+		}
+		else {
+			res.render('pages/orders_admin', {result: result});
+		}
+	}) 
 }
 
 module.exports = {
@@ -183,5 +221,7 @@ module.exports = {
 	createAccount: createAccount,
 	loginValidate:loginValidate,
 	edit: edit,
-	update: update
+	update: update,
+	admin: admin,
+	adminValidate: adminValidate
 };

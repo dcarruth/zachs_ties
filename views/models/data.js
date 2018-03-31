@@ -1,3 +1,6 @@
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 function payment(pool, callback){
 
 	pool.query("SELECT payment, paymentid FROM payments", (err, response) => {
@@ -29,12 +32,16 @@ function createOrder(pool, params, callback){
 }
 
 function createAccount(pool, params, callback){
-	var q = "INSERT INTO customers (name, address, city, st, zip, phone, email, username, password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)";
+	console.log(params);
+	var q = "INSERT INTO customers (name, address, city, st, zip, phone, email, username, password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
 	pool.query(q, params, (err, res) => {
+		console.log("RESPONSE");
+		console.log(res.rows[0].customerid);
 		if (err){
-			callback(1);
+			console.log(err);
+			callback(1, res);
 		}else{
-			callback(null);	
+			callback(null, res);	
 		}
 	})
 }
@@ -49,20 +56,25 @@ function login(pool, params, pass, callback){
 		  else {
 			  if (response.rows != "")
 			  {
-				  if (response.rows[0].password == pass){
+					bcrypt.compare(pass, response.rows[0].password, function(err, res) {
+					if (res){
 					result.name = response.rows[0].name;
 					result.id = response.rows[0].customerid;
 					callback(null, result);
-				  }	
-				  else {
-					 callback(1, "Invalid credentials! Please try again."); 
-				  }
-			  }
-			  else {
-					callback(1,"Username not found! Please create an account.");
-			  }
-		  }
-	  })	
+					}	
+					else {
+						callback(1, "Invalid credentials! Please try again."); 
+					}
+					
+					})
+			  }					
+			 else {
+				callback(1,"Username not found! Please create an account.");
+			 }
+				  
+			
+	  }	
+})
 }
 
 function edit(pool, id, callback){
@@ -92,8 +104,6 @@ function edit(pool, id, callback){
 
 function updateAccount(pool, params, callback){
 	var q = "UPDATE customers SET name = $1, address = $2, city = $3, st = $4, zip = $5, phone = $6, email = $7, username = $8, password = $9 WHERE customerid = $10";
-	console.log(q);
-	console.log(params);
 	pool.query(q,params,(err) => {
 		if (err){
 			console.log(err);	
@@ -104,11 +114,42 @@ function updateAccount(pool, params, callback){
 	});
 }
 
+function validateAdmin(pool, params, pass, callback){
+	var q = "SELECT password FROM owners WHERE username = $1";
+	pool.query(q, params, (err, result) => {
+		if (err){
+			callback(1,null);
+		}
+		else if (result.rowCount == 0){
+			callback(1,null);
+		}
+		else {
+			bcrypt.compare(pass, result.rows[0].password, function(err, res) {
+				if (res){
+					var q2 = "SELECT * FROM orders INNER JOIN customers ON orders.customerid = customers.customerid INNER JOIN payments ON orders.paymentmethodid = payments.paymentid";
+					pool.query(q2, (err, response) => {
+						if (err) {											
+						callback(1, null);
+						}
+						else {
+							callback(null, response.rows);
+						}
+					});
+				}	
+				else {
+					callback(1,null); 
+				}
+		})
+		}
+	})
+}
+
 module.exports = {
 	p: payment,
 	co: createOrder,
 	createAccount: createAccount,
 	login: login,
 	edit: edit,
-	updateAccount: updateAccount
+	updateAccount: updateAccount,
+	validateAdmin: validateAdmin
 };

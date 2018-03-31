@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/zach_header.ejs %>
+</head>
+
+<body id="background1">
+
+  <% include ../partials/zach_nav.ejs %>
+		<div>
+			<table class="tab">
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Phone</th>
+				<th>Order Needed By</th>
+				<th>Number of Ties</th>
+				<th>Color</th>
+				<th>Fabric</th>
+				<th>Pattern</th>
+				<th>Payment</th>
+				<th>Notes</th>
+			</tr>
+				<% for(var res in result) { %>
+					<tr>
+						<td><%=result[res].name %></td>
+						<td><%=result[res].email %></td>
+						<td><%=result[res].phone %></td>
+						<td><%=result[res].orderneededby %></td>
+						<td><%=result[res].numberofties %></td>
+						<td><%=result[res].color %></td>
+						<td><%=result[res].typeoffabric %></td>
+						<td><%=result[res].typeofpattern %></td>
+						<td><%=result[res].payment %></td>
+						<td><%=result[res].notes %></td>
+					</tr>
+				<% } %>
+				<tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -26,6 +26,8 @@ express()
   .get('/gallery', dataController.gallery)
   .get('/edit', dataController.edit)
   .post('/edit', dataController.update)
+  .get('/admin',dataController.admin)
+  .post('/admin',dataController.adminValidate)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
   
