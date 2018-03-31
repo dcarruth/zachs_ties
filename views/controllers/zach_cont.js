@@ -1,9 +1,27 @@
 var data = require('./../models/data.js');
 var path = require('path'),
     fs = require('fs');
+var nodemailer = require('nodemailer');
 
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
+var transporter = nodemailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: 'onpointties@gmail.com',
+		pass: 'owner&founder'
+	}
+});
+
+var mailOptions = {
+	from: 'onpointties@gmail',
+	to: 'dcarruth16@gmail.com',
+	subject: 'A New Order For On Point Ties!',
+	text: 'Zach! You have a new order for On Point Ties! Go check it out!'
+};
+
+
+
 
 function getdb (){
 	const {Pool} = require('pg');
@@ -64,6 +82,13 @@ function gallery(req, res){
 }
 
 function createOrder(req, res){
+	transporter.sendMail(mailOptions, function(error, info){
+				if (error) {
+					console.log(error);
+				} else {
+					console.log('Email sent: ' + info.response);
+				}	
+			});
 	var pool = getdb();
 	var color = req.body.color;
 	var numTies = req.body.numTies;
@@ -94,7 +119,7 @@ function createOrder(req, res){
 		  })};
 	
 	});
-  
+	
 	pool.end();
 }
 
