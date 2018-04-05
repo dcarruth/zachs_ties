@@ -47,7 +47,6 @@ td{
 	width: 35%;
 	margin-left: 32.5%;
 	margin-top: 1.5%;
-
 }
 
 .pic2{
@@ -95,6 +94,14 @@ td{
 #returnH{
 	margin-left: 25%;
 }
-#footer{
-	
+
+.footer{
+	float: left;
+    width: 100%;
+	text-align: center;	
 }
+
+.gap{
+	height: 15px;
+}
+
