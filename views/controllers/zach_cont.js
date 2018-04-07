@@ -97,7 +97,8 @@ function createOrder(req, res){
 	var pattern = req.body.pattern;
 	var notes = req.body.notes;
 	var method = req.body.method;
-	var params = [req.session.id, method, numTies, dateNeeded, color, pattern, fabric, notes, Date.today()];
+	var url = req.body.url;
+	var params = [req.session.id, method, numTies, dateNeeded, color, pattern, fabric, notes, Date.today(),url];
 	if (typeof req.session.name == "undefined"){
 			res.render('pages/confirm',{
 			message: "Oops! Please login before ordering."

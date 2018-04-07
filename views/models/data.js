@@ -20,7 +20,7 @@ function payment(pool, callback){
 }
 
 function createOrder(pool, params, callback){
-	var q = "INSERT INTO orders (customerID, paymentMethodID, numberOfTies, orderNeededBy, color, typeOfPattern, typeOfFabric, notes, dateOrdered) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+	var q = "INSERT INTO orders (customerID, paymentMethodID, numberOfTies, orderNeededBy, color, typeOfPattern, typeOfFabric, notes, dateOrdered, url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
 	  pool.query(q, params, (err, re) => {
 		  if (err){
 			callback(1);
